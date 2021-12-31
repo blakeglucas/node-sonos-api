@@ -1,103 +1,120 @@
-# TSDX User Guide
+# Node Sonos API
 
-Congrats! You just saved yourself hours of work by bootstrapping this project with TSDX. Let’s get you oriented with what’s here and how to use it.
+This is a library for integrating NodeJS applications with Sonos in a convenient manner. It is also intended to be easily portable to react-native by stubbing node-ssdp with react-native-ssdp.
 
-> This TSDX setup is meant for developing libraries (not apps!) that can be published to NPM. If you’re looking to build a Node app, you could use `ts-node-dev`, plain `ts-node`, or simple `tsc`.
+## Usage
 
-> If you’re new to TypeScript, checkout [this handy cheatsheet](https://devhints.io/typescript)
+```javascript
+import { SonosAPI } from 'node-sonos-api'
 
-## Commands
-
-TSDX scaffolds your new library inside `/src`.
-
-To run TSDX, use:
-
-```bash
-npm start # or yarn start
+const sonosApi = new SonosAPI()
+await sonosApi.discoverDevices()
+console.log(sonosApi.getDevices())
 ```
 
-This builds to `/dist` and runs the project in watch mode so any edits you save inside `src` causes a rebuild to `/dist`.
+To control a particular device's attributes:
 
-To do a one-off build, use `npm run build` or `yarn build`.
-
-To run tests, use `npm test` or `yarn test`.
-
-## Configuration
-
-Code quality is set up for you with `prettier`, `husky`, and `lint-staged`. Adjust the respective fields in `package.json` accordingly.
-
-### Jest
-
-Jest tests are set up to run with `npm test` or `yarn test`.
-
-### Bundle Analysis
-
-[`size-limit`](https://github.com/ai/size-limit) is set up to calculate the real cost of your library with `npm run size` and visualize the bundle with `npm run analyze`.
-
-#### Setup Files
-
-This is the folder structure we set up for you:
-
-```txt
-/src
-  index.tsx       # EDIT THIS
-/test
-  blah.test.tsx   # EDIT THIS
-.gitignore
-package.json
-README.md         # EDIT THIS
-tsconfig.json
+```javascript
+const device = sonosApi.getDeviceByUUID('...')
+device.setVolume(15)
+device.setMute(true)
+device.setSubEnable(false)
+...
 ```
 
-### Rollup
+## Methods
 
-TSDX uses [Rollup](https://rollupjs.org) as a bundler and generates multiple rollup configs for various module formats and build settings. See [Optimizations](#optimizations) for details.
+### SonosAPI Class
 
-### TypeScript
+`async discoverDevices(): void`
 
-`tsconfig.json` is set up to interpret `dom` and `esnext` types, as well as `react` for `jsx`. Adjust according to your needs.
+Discovers Sonos devices on the current WiFi network.
 
-## Continuous Integration
+`getDevices(): SonosDevice[]`
 
-### GitHub Actions
+Returns the *visible* Sonos devices previously discovered.
 
-Two actions are added by default:
+`getAllDevices(): SonosDevice[]`
 
-- `main` which installs deps w/ cache, lints, tests, and builds on all pushes against a Node and OS matrix
-- `size` which comments cost comparison of your library on every pull request using [`size-limit`](https://github.com/ai/size-limit)
+Returns all devices previously discovered.
 
-## Optimizations
+`getDeviceByUUID(uuid: string): SonosDevice | undefined`
 
-Please see the main `tsdx` [optimizations docs](https://github.com/palmerhq/tsdx#optimizations). In particular, know that you can take advantage of development-only optimizations:
+Returns a device by Sonos UUID, usually of the form "RINCON_XXXXXXXXXXX"
 
-```js
-// ./types/index.d.ts
-declare var __DEV__: boolean;
+`getDevice(findFn: (dev: SonosDevice) => boolean): SonosDevice | undefined`
 
-// inside your code...
-if (__DEV__) {
-  console.log('foo');
-}
-```
+Allows the user to implement a custom find function (`findFn`) to locate a device.
 
-You can also choose to install and use [invariant](https://github.com/palmerhq/tsdx#invariant) and [warning](https://github.com/palmerhq/tsdx#warning) functions.
+### SonosDevice Class
 
-## Module Formats
+`async play(): void`
 
-CJS, ESModules, and UMD module formats are supported.
+Sends the Play command to the device.
 
-The appropriate paths are configured in `package.json` and `dist/index.js` accordingly. Please report if any issues are found.
+`async pause(): void`
 
-## Named Exports
+Sends the Pause command to the device.
 
-Per Palmer Group guidelines, [always use named exports.](https://github.com/palmerhq/typescript#exports) Code split inside your React app instead of your React library.
+`async stop(): void`
 
-## Including Styles
+Sends the Stop command to the device.
 
-There are many ways to ship styles, including with CSS-in-JS. TSDX has no opinion on this, configure how you like.
+`async next(): void`
 
-For vanilla CSS, you can include it at the root directory and add it to the `files` section in your `package.json`, so that it can be imported separately by your users and run through their bundler's loader.
+Sends the Next Track command to the device.
 
-## Publishing to NPM
+`async previous(): void`
 
-We recommend using [np](https://github.com/sindresorhus/np).
+Send the Previous Track command to the device.
+
+`async setVolume(volume: number, /*relative = false*/): void`
+
+Sends the Set Volume command to the device. Relative volumes are planned for a future version.
+
+`async setMute(mute: boolean): void`
+
+Sets the mute status of the device.
+
+`async addToGroup(parent: SonosDevice | string): void`
+
+Adds the device to the group (AVTransport) associated with the parent device, which can be specified by either SonosDevice instance or UUID string.
+
+`async removeFromGroup(): void`
+
+Removes the device from a current connected group.
+
+`async setGroupVolume(volume: number, /*relative = false*/): void`
+
+Sets the volume for the group (AVTransport) associated with the device. Relative volumes are planned for a future version.
+
+`async setGroupMute(mute: boolean): void`
+
+Sets the mute status of the group (AVTransport) associated with the device.
+
+`async setSubEnable(subEnabled: boolean): void`
+
+Sets the Subwoofer Enable for the device. Not applicable for invisible devices.
+
+`async getZoneGroupState(): ZoneGroupStateData`
+
+Returns the ZoneGroupState associated with the current ZoneGroup. While attached to a device, it returns the same value for every device in the ZoneGroup.
+
+`async getZoneGroupAttributes(): ZoneGroupAttributeData`
+
+Returns the ZoneGroupAttributes for the device.
+
+## Acknowledgments
+
+While not a direct fork of either, this library is based **heavily** off of the following:
+
+- [node-sonos-http-api](https://github.com/jishi/node-sonos-http-api) by @Jishi
+- [node-sonos-discovery](https://github.com/jishi/node-sonos-discovery) by @Jishi
+
+## TODO
+
+- Unit tests
+- More robust error handling
+- Event subscriptions/device state updating
+- Relative volume setting
+- More subwoofer controls
