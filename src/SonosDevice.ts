@@ -1,4 +1,4 @@
-import { Axios } from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import { XMLParser } from 'fast-xml-parser';
 import * as actions from './actions'
 import { SoapRequestBase } from './utils/SoapRequest';
@@ -9,7 +9,7 @@ export class SonosDevice {
     readonly locationURL: string;
     readonly displayName: string;
     readonly metadata?: object;
-    private readonly api: Axios;
+    private readonly api: AxiosInstance;
     public invisible = false;
 
     constructor(uuid: string, ipAddress: string, locationURL: string, displayName: string, metadata?: object) {
@@ -18,9 +18,8 @@ export class SonosDevice {
         this.locationURL = locationURL;
         this.displayName = displayName;
         this.metadata = metadata
-        this.api = new Axios({
+        this.api = axios.create({
             baseURL: `http://${this.ipAddress}:1400`,
-            responseType: 'document',
             headers: {
                 'content-type': 'application/xml',
             }

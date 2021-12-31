@@ -1,11 +1,9 @@
-import { Axios } from 'axios'
+import axios from 'axios'
 import { Client } from 'node-ssdp';
 import { XMLParser } from 'fast-xml-parser'
 import { SonosDevice } from './SonosDevice';
 
-const xmlFetch = new Axios({
-  responseType: 'document',
-})
+const xmlFetch = axios.create({})
 
 export interface SonosAPIOptions {
   discoverTimeoutMs?: number
