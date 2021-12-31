@@ -1,0 +1,63 @@
+{
+    "version": "0.1.0",
+    "license": "MIT",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts",
+    "files": [
+        "dist",
+        "src"
+    ],
+    "engines": {
+        "node": ">=10"
+    },
+    "scripts": {
+        "start": "tsdx watch",
+        "build": "tsdx build",
+        "test": "tsdx test",
+        "lint": "tsdx lint",
+        "prepare": "tsdx build",
+        "size": "size-limit",
+        "analyze": "size-limit --why"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "tsdx lint"
+        }
+    },
+    "prettier": {
+        "printWidth": 80,
+        "semi": true,
+        "singleQuote": true,
+        "trailingComma": "es5"
+    },
+    "name": "sonosapi",
+    "author": "Blake Lucas",
+    "module": "dist/sonosapi.esm.js",
+    "size-limit": [
+        {
+            "path": "dist/sonosapi.cjs.production.min.js",
+            "limit": "10 KB"
+        },
+        {
+            "path": "dist/sonosapi.esm.js",
+            "limit": "10 KB"
+        }
+    ],
+    "devDependencies": {
+        "@size-limit/preset-small-lib": "^7.0.5",
+        "@types/node-ssdp": "^4.0.1",
+        "@types/xml-flow": "^1.0.1",
+        "husky": "^7.0.4",
+        "size-limit": "^7.0.5",
+        "tsdx": "^0.14.1",
+        "tslib": "^2.3.1",
+        "typescript": "^3.9.10"
+    },
+    "dependencies": {
+        "axios": "^0.24.0",
+        "fast-xml-parser": "^4.0.0-beta.8",
+        "node-ssdp": "^4.0.1",
+        "node-upnp": "^1.2.0",
+        "xml-flow": "^1.0.4"
+    }
+}
