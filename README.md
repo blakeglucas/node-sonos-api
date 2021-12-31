@@ -1,6 +1,6 @@
 # Node Sonos API
 
-This is a library for integrating NodeJS applications with Sonos in a convenient manner. It is also intended to be easily portable to react-native by stubbing node-ssdp with react-native-ssdp.
+This is a library for integrating NodeJS applications with Sonos in a convenient manner. It is also intended to be easily usable with react-native thanks to rn-nodeify and react-native-ssdp.
 
 ## Usage
 

@@ -30,7 +30,7 @@
         "singleQuote": true,
         "trailingComma": "es5"
     },
-    "name": "sonosapi",
+    "name": "node-sonos-api",
     "author": "Blake Lucas",
     "module": "dist/sonosapi.esm.js",
     "size-limit": [
@@ -56,7 +56,7 @@
     "dependencies": {
         "axios": "^0.24.0",
         "fast-xml-parser": "^4.0.0-beta.8",
-        "node-ssdp": "^4.0.1",
+        "node-ssdp": "github:blakeglucas/node-ssdp",
         "node-upnp": "^1.2.0",
         "xml-flow": "^1.0.4"
     }
