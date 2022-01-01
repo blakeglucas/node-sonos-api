@@ -1,6 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 import { XMLParser } from 'fast-xml-parser';
 import * as actions from './actions'
+import { SOURCE_PREFIX } from './actions/SetAudioSource';
 import { SoapRequestBase } from './utils/SoapRequest';
 
 export class SonosDevice {
@@ -113,5 +114,10 @@ export class SonosDevice {
         const [_, data] = await this.invokeSoapRequest(new actions.GetZoneGroupAttributesAction());
         const payload = data['s:Envelope']['s:Body']['u:GetZoneGroupAttributesResponse']
         return payload;
+    }
+
+    async setAudioSource(source: SonosDevice | string, sourcePrefix: SOURCE_PREFIX) {
+        const [headers, data] = await this.invokeSoapRequest(new actions.SetAudioSourceAction(source, sourcePrefix))
+        console.log(headers, data)
     }
 }
