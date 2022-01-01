@@ -52,8 +52,15 @@ export class SonosDevice {
     }
 
     async pause() {
-        const [headers, data] = await this.invokeSoapRequest(new actions.PauseAction());
-        console.log(headers, data)
+        try {
+            const [headers, data] = await this.invokeSoapRequest(new actions.PauseAction());
+            console.log(headers, data)
+            return true;
+        }
+        catch (e) {
+            console.log('Caught exception in PauseAction, probably because the device cannot be paused')
+            return false;
+        }
     }
 
     async stop() {
