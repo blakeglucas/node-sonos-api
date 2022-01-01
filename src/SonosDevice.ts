@@ -122,7 +122,11 @@ export class SonosDevice {
     }
 
     async setAudioSource(source: SonosDevice | string, sourcePrefix: SOURCE_PREFIX) {
+        try {
         /*const [headers, data] = */await this.invokeSoapRequest(new actions.SetAudioSourceAction(source, sourcePrefix))
-        // console.log(headers, data)
+            // console.log(headers, data)
+        } catch (e) {
+            throw new Error('Could not switch device source. Probably an invalid sourcePrefix was specified for the source device type')
+        }
     }
 }
