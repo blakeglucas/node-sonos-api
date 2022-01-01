@@ -26,19 +26,24 @@ export class SonosDevice {
             }
         })
         // TODO Better invisible mechanic
-        this.getZoneGroupAttributes().then(data => {
-            this.invisible = !data.CurrentZoneGroupName;
-        })
+        // this.getZoneGroupAttributes().then(data => {
+        //     this.invisible = !data.CurrentZoneGroupName;
+        // })
     }
 
     private async invokeSoapRequest(request: SoapRequestBase) {
         const body = request.createRequestPayload()
-        const response = await this.api.post(request.getUrl(), body, {
-            headers: {
-                'SOAPACTION': request.action,
-            }
-        })
-        return [response.headers, new XMLParser().parse(response.data)]
+        try {
+            const response = await this.api.post(request.getUrl(), body, {
+                headers: {
+                    'SOAPACTION': request.action,
+                }
+            })
+            return [response.headers, new XMLParser().parse(response.data)]
+        } catch (e) {
+            throw new Error('Unable to complete SOAP request')
+        }
+
     }
 
     async play() {
@@ -117,7 +122,7 @@ export class SonosDevice {
     }
 
     async setAudioSource(source: SonosDevice | string, sourcePrefix: SOURCE_PREFIX) {
-        const [headers, data] = await this.invokeSoapRequest(new actions.SetAudioSourceAction(source, sourcePrefix))
-        console.log(headers, data)
+        /*const [headers, data] = */await this.invokeSoapRequest(new actions.SetAudioSourceAction(source, sourcePrefix))
+        // console.log(headers, data)
     }
 }

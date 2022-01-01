@@ -12,15 +12,13 @@ export class SubEnableAction extends SoapRequestBase {
     }
 
     createRequestPayload(): string {
-        const p = this.xmlBuilder.build(this.wrapBodyObj({
+        return this.xmlBuilder.build(this.wrapBodyObj({
             'u:SetEQ': {
                 InstanceID: 0,
                 EQType: 'SubEnable',
                 DesiredValue: this.subEnabled ? 1 : 0,
             }
         }));
-        console.log(p)
-        return p
     }
 
 }

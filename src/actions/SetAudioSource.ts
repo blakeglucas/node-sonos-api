@@ -29,7 +29,7 @@ export class SetAudioSourceAction extends SoapRequestBase {
             'u:SetAVTransportURI': {
                 InstanceID: 0,
                 CurrentURI: this.createURI(),
-                CurrentURIMetadata: '',
+                CurrentURIMetaData: '',
             }
         }));
     }
