@@ -19,13 +19,15 @@ export class GroupWithAction extends SoapRequestBase {
     }
 
     createRequestPayload(): string {
-        return this.xmlBuilder.build(this.wrapBodyObj({
+        const p = this.xmlBuilder.build(this.wrapBodyObj({
             'u:SetAVTransportURI': {
                 InstanceID: 0,
-                CurrentURI: this.parentUUID,
+                CurrentURI: `x-rincon:${this.parentUUID}`,
                 CurrentURIMetaData: '',
             }
         }));
+        console.log(p)
+        return p
     }
 
 }
